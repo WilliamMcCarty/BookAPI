@@ -1,30 +1,77 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "MovieAPI";
 }
 
 <div class="jumbotron">
-    <h1>BookApi</h1>
-    <p class="lead">BookAPI Coding Exercise</p>
+    <h1>@ViewBag.Title</h1>
+    <p class="lead">MovieAPI Coding Exercise (MVC, React, javaScript, JSON, BootStrap)</p>
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
+    <div class="col-md-12">
+        <h2>MovieAPI Movie Search</h2>
         <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
+            Search for a Movie and the Movies will be returned with a API call.
         </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        <p>
+            @* Search text box for searching *@
+            <input class="form-control form-control-lg" placeholder="Search" id="search" type="text">
+        </p>
+        <p>
+            @* Button to call the javaScript function when pressed process the API call *@
+            <button id="button1" type="button" value="Search" class="btn btn-sm btn-primary" onclick="getMovies()">Search</button>
+            @* Button to call the javaScript function when pressed to clear the search *@
+            <button id="button2" type="button" value="Clear Search" class="btn btn-sm btn-primary" onclick="clearMovies()">Clear Search</button>
+        </p>
+        <p>
+            @* HTML element to put the API results in *@
+            <span id="searchedMovies"></span>
+        </p>
     </div>
 </div>
+
+@section Scripts
+    {
+    <script>
+        function getMovies() {
+            document.getElementById('searchedMovies').innerHTML = "";
+            if (document.getElementById('search').value.trim() == "") {
+                alert("Please Enter Search, Search Can Not Be Empty!");
+                return false;
+            }
+            else {
+                const input = document.getElementById('search');
+                const value = input.value;
+                let url = 'http://www.omdbapi.com/?s=' + value + '&apikey=3f66eca5';
+                $.getJSON(url).done(function (data) {
+                    console.log(data);
+                    if (data.Response == "False")
+                    {
+                        alert("Movie Not Found, Please Try Again!");
+                        return false;
+                    }
+                    var count = parseInt(data.Search.length - 1);
+                    for (var i = 0; i <= count; i++) {
+                        var bookLayout = '<div class="row"><div class="col-sm-5 col-md-5"><div class="thumbnail">' +
+                            '<img src="' + data.Search[i].Poster + '" alt="' + data.Search[i].Title + '" title="' + data.Search[i].Title + '">' +
+                            '<div class="caption">' +
+                            '<h3>' + data.Search[i].Title + '</h3>' +
+                            '<p>Type: ' + data.Search[i].Type + '<br/>Year: ' + data.Search[i].Year + '<br/>imdbID: ' + data.Search[i].imdbID + '</p>' +
+                            '<p><a href="#" class="btn btn-primary" role="button">Details</a> ' +
+                            ' <a href="#" class="btn btn-success" role="button">Add To Cart</a></p>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+
+                        document.getElementById('searchedMovies').innerHTML += bookLayout;
+                    }
+                });
+            }
+        }
+
+        function clearMovies() {
+            document.getElementById('searchedMovies').innerHTML = "";
+        }
+    </script>
+}
