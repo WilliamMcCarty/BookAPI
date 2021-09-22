@@ -23,7 +23,8 @@ textarea {
     max-width: 280px;
 }
 
-td {
+td,
+th {
     font-size: 1.3em;
     text-shadow: 2px 4px 5px mediumpurple;
 }

@@ -55,7 +55,7 @@
                     var count = parseInt(data.Search.length - 1);
                     var movieLayout = '<table class="table"><tr><th>Poster</th><th>Title</th><th>Type</th><th>Year</th><th>ImdbID</th></tr>';
                     for (var i = 0; i <= count; i++) {
-                        movieLayout += '<tr><td><img class="img-fluid img-thumbnail boxShadow" src="' + data.Search[i].Poster + '" alt="' + data.Search[i].Title + '" title="' + data.Search[i].Title + ' class="thumbnail"></td>'
+                        movieLayout += '<tr><td><img class="img-fluid img-thumbnail boxShadow" src="' + data.Search[i].Poster + '" alt="' + data.Search[i].Title + '" title="' + data.Search[i].Title + '"</td>'
                         movieLayout += '<td>' + data.Search[i].Title + '</td>'
                         movieLayout += '<td>' + data.Search[i].Type + '</td>'
                         movieLayout += '<td>' + data.Search[i].Year + '</td>'
