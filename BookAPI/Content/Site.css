@@ -22,3 +22,13 @@ select,
 textarea {
     max-width: 280px;
 }
+
+td {
+    font-size: 1.3em;
+    text-shadow: 2px 4px 5px mediumpurple;
+}
+
+.boxShadow {
+    box-shadow: 5px 5px 5px mediumpurple;
+    border-radius: 20px;
+}
