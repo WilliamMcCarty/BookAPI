@@ -4,7 +4,8 @@
 
 <div class="jumbotron">
     <h1>@ViewBag.Title</h1>
-    <p class="lead">MovieAPI Coding Exercise (MVC, React, JavaScript, JSON, Bootstrap)</p>
+    <p class="lead">MovieAPI Coding Exercise (MVC, JavaScript, jQuery JSON, Bootstrap, Tables, Paging)<br/>
+    Consuming API and Displaying It.</p>
 </div>
 
 <div class="row">
@@ -19,7 +20,7 @@
         </p>
         <p>
             @* Button to call the javaScript function when pressed process the API call *@
-            <button id="button1" type="button" value="Search" class="btn btn-sm btn-primary" onclick="getMovies()">Search</button>
+            <button id="button1" type="button" value="Search" class="btn btn-sm btn-primary" onclick="getMovies('1')">Search</button>
             @* Button to call the javaScript function when pressed to clear the search *@
             <button id="button2" type="button" value="Clear Search" class="btn btn-sm btn-primary" onclick="clearMovies()">Clear Search</button>
         </p>
@@ -30,14 +31,20 @@
     </div>
 </div>
 
+<span id="moviePagesTop"></span>
+
 @* HTML element to put the API results in *@
 <span id="searchedMovies"></span>
+
+<span id="moviePagesBottom"></span>
 
 @section Scripts
     {
     <script>
-        function getMovies() {
+        function getMovies(pToUse) {
             document.getElementById('searchedMovies').innerHTML = "";
+            document.getElementById('moviePagesTop').innerHTML = ''
+            document.getElementById('moviePagesBottom').innerHTML = ''
             if (document.getElementById('search').value.trim() == "") {
                 alert("Please Enter Search, Search Can Not Be Empty!");
                 return false;
@@ -45,7 +52,7 @@
             else {
                 const input = document.getElementById('search');
                 const value = input.value;
-                let url = 'http://www.omdbapi.com/?s=' + value + '&apikey=3f66eca5';
+                let url = 'http://www.omdbapi.com/?s=' + value + '&r=json&page=' + pToUse + '&apikey=3f66eca5';
                 $.getJSON(url).done(function (data) {
                     console.log(data);
                     if (data.Response == "False") {
@@ -53,7 +60,10 @@
                         return false;
                     }
                     var count = parseInt(data.Search.length - 1);
-                    var movieLayout = '<table class="table"><tr><th>Poster</th><th>Title</th><th>Type</th><th>Year</th><th>ImdbID</th></tr>';
+                    var totalResults = data.totalResults;
+                    var pages = Math.ceil(totalResults / 10);
+                    console.log(pages);
+                    var movieLayout = '<table border="1" class="table table-striped"><tr><th>Poster</th><th>Title</th><th>Type</th><th>Year</th><th>ImdbID</th></tr>'
                     for (var i = 0; i <= count; i++) {
                         movieLayout += '<tr><td><img class="img-fluid img-thumbnail boxShadow" src="' + data.Search[i].Poster + '" alt="' + data.Search[i].Title + '" title="' + data.Search[i].Title + '"</td>'
                         movieLayout += '<td>' + data.Search[i].Title + '</td>'
@@ -62,6 +72,15 @@
                         movieLayout += '<td>' + data.Search[i].imdbID + '</td></tr>'
                     }
                     document.getElementById('searchedMovies').innerHTML += movieLayout + '</table>';
+                    var moviePagingTop = 'Page: '
+                    var moviePagingBottom = 'Page: '
+                    for (var z = 1; z <= pages; z++) {
+                        moviePagingTop += ' <button id="button1" type="button" value="Search" class="btn btn-sm btn-primary" onclick="getMovies(' + z + ')">' + z + '</button> '
+                        moviePagingBottom += ' <button id="button1" type="button" value="Search" class="btn btn-sm btn-primary" onclick="getMovies(' + z + ')">' + z + '</button> '
+                    }
+                    document.getElementById('moviePagesTop').innerHTML = moviePagingTop;
+                    document.getElementById('moviePagesBottom').innerHTML = moviePagingBottom;
+
                 });
             }
         }
@@ -69,6 +88,8 @@
         function clearMovies() {
             document.getElementById('searchedMovies').innerHTML = "";
             document.getElementById('search').value = "";
+            document.getElementById('moviePagesTop').innerHTML = ''
+            document.getElementById('moviePagesBottom').innerHTML = ''
         }
     </script>
 }
